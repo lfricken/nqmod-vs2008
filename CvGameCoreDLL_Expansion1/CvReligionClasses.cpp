@@ -4092,6 +4092,8 @@ CvCity *CvReligionAI::ChooseProphetConversionCity(bool bOnlyBetterThanEnhancingR
 		}
 	}
 
+	/*
+	// Skip if another civilization (player or city state)
 	// Now try other players, assuming don't need to enhance religion
 	if (!bOnlyBetterThanEnhancingReligion)
 	{
@@ -4123,7 +4125,7 @@ CvCity *CvReligionAI::ChooseProphetConversionCity(bool bOnlyBetterThanEnhancingR
 			}
 		}
 	}
-
+    */
 	return pBestCity;
 }
 
@@ -4954,17 +4956,24 @@ int CvReligionAI::ScoreCityForMissionary(CvCity* pCity, UnitHandle pUnit)
 {
 	int iScore = 0;
 	ReligionTypes eMyReligion = GetReligionToSpread();
-
-	// Skip if not revealed
-	if(!pCity->plot()->isRevealed(m_pPlayer->getTeam()))
-	{
+		
+	// Skip if another civilization (player or city state)
+	if (pCity->getOwner() != m_pPlayer->GetID()) {
 		return iScore;
 	}
 
-	// Skip if already our religion
-	if(pCity->GetCityReligions()->GetReligiousMajority() == eMyReligion)
-	{
+	
+	/*
+	// Other players are already not considered, trivial control block
+	// Skip if not revealed
+	if (!pCity->plot()->isRevealed(m_pPlayer->getTeam())) {
 		return iScore;
+	}
+	*/
+
+	// Skip if already our religion
+	if (pCity->GetCityReligions()->GetReligiousMajority() == eMyReligion) {
+	  return iScore;
 	}
 
 	// Base score based on if we are establishing majority
@@ -4974,6 +4983,8 @@ int CvReligionAI::ScoreCityForMissionary(CvCity* pCity, UnitHandle pUnit)
 		iScore *= 2;
 	}
 
+	/* 
+	// Other players are already not considered, trivial control block
 	if (!GET_PLAYER(pCity->getOwner()).isMinorCiv())
 	{
 		if (m_pPlayer->GetDiplomacyAI()->IsPlayerAgreeNotToConvert(pCity->getOwner()))
@@ -4981,6 +4992,7 @@ int CvReligionAI::ScoreCityForMissionary(CvCity* pCity, UnitHandle pUnit)
 			return 0;
 		}
 	}
+	*/
 
 	CvPlayer& kCityPlayer = GET_PLAYER(pCity->getOwner());
 	// Much better score if our own city or if this city owner isn't starting a religion
@@ -4988,19 +5000,26 @@ int CvReligionAI::ScoreCityForMissionary(CvCity* pCity, UnitHandle pUnit)
 	{
 		iScore *= 5;
 	}
+	/* 
+	// Other players are already not considered, trivial control block
 	else if(!kCityPlayer.GetReligions()->HasCreatedReligion())
 	{
 		iScore *= 3;
 	}
+	*/
 
 	// Then subtract distance
 	iScore -= plotDistance(pUnit->getX(), pUnit->getY(), pCity->getX(), pCity->getY());
 
+	/*
+	// Other players are already not considered, trivial control block
 	// Multiplier by how safe it is
 	if(!atWar(m_pPlayer->getTeam(), kCityPlayer.getTeam()))
 	{
 		iScore *= 2;
 	}
+	*/
+	
 
 	return iScore;
 }
