@@ -4552,7 +4552,7 @@ int CvCityCulture::GetBaseTourismBeforeModifiers()
 			if(pkEntry && m_pCity->GetCityBuildings()->GetNumBuilding(eBuilding) > 0)
 			{
 				int iTourism = pkEntry->GetTechEnhancedTourism();
-				if (iTourism > 0 && GET_TEAM(m_pCity->getTeam()).GetTeamTechs()->HasTech((TechTypes)pkEntry->GetEnhancedYieldTech()))
+				if (GET_TEAM(m_pCity->getTeam()).GetTeamTechs()->HasTech((TechTypes)pkEntry->GetEnhancedYieldTech()))
 				{
 					iBase += iTourism;
 				}
@@ -4564,7 +4564,7 @@ int CvCityCulture::GetBaseTourismBeforeModifiers()
 	iBase += GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_PER_CITY);
 #endif
 
-	return iBase;
+	return max(0, iBase);
 }
 
 /// What is the tourism output ignoring player-specific modifiers?

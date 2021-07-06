@@ -1281,6 +1281,12 @@ bool CvPromotionEntry::IsCityAttackOnly() const
 	return m_bCityAttackOnly;
 }
 
+/// Accessor: Does this unit only attack cities
+bool CvPromotionEntry::IsNoCityAttack() const
+{
+	return m_bNoCityAttack;
+}
+
 /// Accessor: Is a defeated enemy captured?
 bool CvPromotionEntry::IsCaptureDefeatedEnemy() const
 {

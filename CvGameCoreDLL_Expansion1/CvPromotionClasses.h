@@ -152,6 +152,7 @@ public:
 	bool IsHealIfDefeatExcludeBarbarians() const;
 	bool IsEmbarkedAllWater() const;
 	bool IsCityAttackOnly() const;
+	bool IsNoCityAttack() const;
 	bool IsCaptureDefeatedEnemy() const;
 	bool IsIgnoreGreatGeneralBenefit() const;
 
@@ -292,6 +293,7 @@ protected:
 	bool m_bHealIfDefeatExcludesBarbarians;
 	bool m_bEmbarkedAllWater;
 	bool m_bCityAttackOnly;
+	bool m_bNoCityAttack;
 	bool m_bCaptureDefeatedEnemy;
 	bool m_bIgnoreGreatGeneralBenefit;
 

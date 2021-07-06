@@ -225,6 +225,7 @@ protected:
 	static int lIsSetUpForRangedAttack(lua_State* L);
 	static int lIsRangeAttackOnlyInDomain(lua_State* L);
 	static int lIsCityAttackOnly(lua_State* L);
+	static int lIsNoCityAttack(lua_State* L);
 
 	static int lImmuneToFirstStrikes(lua_State* L);
 	static int lNoDefensiveBonus(lua_State* L);

@@ -155,6 +155,7 @@ CvUnit::CvUnit() :
 	, m_iMustSetUpToRangedAttackCount("CvUnit::m_iMustSetUpToRangedAttackCount", m_syncArchive)
 	, m_iRangeAttackIgnoreLOSCount("CvUnit::m_iRangeAttackIgnoreLOSCount", m_syncArchive)
 	, m_iCityAttackOnlyCount(0)
+	, m_iNoCityAttackCount(0)
 	, m_iCaptureDefeatedEnemyCount(0)
 	, m_iRangedSupportFireCount("CvUnit::m_iRangedSupportFireCount", m_syncArchive)
 	, m_iAlwaysHealCount("CvUnit::m_iAlwaysHealCount", m_syncArchive)
@@ -675,6 +676,7 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_iMustSetUpToRangedAttackCount = 0;
 	m_iRangeAttackIgnoreLOSCount = 0;
 	m_iCityAttackOnlyCount = 0;
+	m_iNoCityAttackCount = 0;
 	m_iCaptureDefeatedEnemyCount = 0;
 	m_iRangedSupportFireCount = 0;
 	m_iAlwaysHealCount = 0;
@@ -3794,6 +3796,12 @@ bool CvUnit::IsCityAttackOnly() const
 	VALIDATE_OBJECT
 	return m_iCityAttackOnlyCount > 0;
 }
+//	--------------------------------------------------------------------------------
+bool CvUnit::IsNoCityAttack() const
+{
+	VALIDATE_OBJECT
+	return m_iNoCityAttackCount > 0;
+}
 
 //	--------------------------------------------------------------------------------
 void CvUnit::ChangeCityAttackOnlyCount(int iChange)
@@ -3802,6 +3810,16 @@ void CvUnit::ChangeCityAttackOnlyCount(int iChange)
 	if(iChange != 0)
 	{
 		m_iCityAttackOnlyCount += iChange;
+	}
+}
+
+//	--------------------------------------------------------------------------------
+void CvUnit::ChangeNoCityAttackCount(int iChange)
+{
+	VALIDATE_OBJECT
+	if(iChange != 0)
+	{
+		m_iNoCityAttackCount += iChange;
 	}
 }
 
@@ -15609,6 +15627,7 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		changeFreePillageMoveCount((thisPromotion.IsFreePillageMoves()) ? iChange: 0);
 		ChangeEmbarkAllWaterCount((thisPromotion.IsEmbarkedAllWater()) ? iChange: 0);
 		ChangeCityAttackOnlyCount((thisPromotion.IsCityAttackOnly()) ? iChange: 0);
+		ChangeNoCityAttackCount((thisPromotion.IsNoCityAttack()) ? iChange: 0);
 		ChangeCaptureDefeatedEnemyCount((thisPromotion.IsCaptureDefeatedEnemy()) ? iChange: 0);
 
 		ChangeEmbarkExtraVisibility((thisPromotion.GetEmbarkExtraVisibility()) * iChange);
@@ -16017,12 +16036,14 @@ void CvUnit::read(FDataStream& kStream)
 		kStream >> m_iGreatGeneralReceivesMovementCount;
 		kStream >> m_iGreatGeneralCombatModifier;
 		kStream >> m_iCityAttackOnlyCount;
+		kStream >> m_iNoCityAttackCount;
 	}
 	else
 	{
 		m_iGreatGeneralReceivesMovementCount = 0;
 		m_iGreatGeneralCombatModifier = 0;
 		m_iCityAttackOnlyCount = 0;
+		m_iCityNoAttackCount = 0;
 	}
 
 	if (uiVersion >= 20)
@@ -16140,6 +16161,7 @@ void CvUnit::write(FDataStream& kStream) const
 	kStream << m_iGreatGeneralReceivesMovementCount;
 	kStream << m_iGreatGeneralCombatModifier;
 	kStream << m_iCityAttackOnlyCount;
+	kStream << m_iNoCityAttackCount;
 	kStream << m_iIgnoreGreatGeneralBenefit;
 	kStream << m_iCaptureDefeatedEnemyCount;
 	kStream << m_iGreatAdmiralCount;

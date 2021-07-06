@@ -215,7 +215,9 @@ public:
 	void setSetUpForRangedAttack(bool bValue);
 
 	bool IsCityAttackOnly() const;
+	bool IsNoCityAttack() const;
 	void ChangeCityAttackOnlyCount(int iChange);
+	void ChangeNoCityAttack(int iChange);
 
 	bool IsCaptureDefeatedEnemy() const;
 	void ChangeCaptureDefeatedEnemyCount(int iChange);
@@ -1214,6 +1216,7 @@ protected:
 	FAutoVariable<int, CvUnit> m_iMustSetUpToRangedAttackCount;
 	FAutoVariable<int, CvUnit> m_iRangeAttackIgnoreLOSCount;
 	int m_iCityAttackOnlyCount;
+	int m_iNoCityAttackCount;
 	int m_iCaptureDefeatedEnemyCount;
 	FAutoVariable<int, CvUnit> m_iRangedSupportFireCount;
 	FAutoVariable<int, CvUnit> m_iAlwaysHealCount;
