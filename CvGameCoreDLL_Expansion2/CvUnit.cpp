@@ -11421,9 +11421,9 @@ int CvUnit::GetTourismCombatPenalty(const PlayerTypes eOtherPlayerId) const
 	
 	if (theirInfluence > ourInfluence)
 	{
-		int maxBonus = 50;
-		int influenceDivisor = 2;
-		iRetVal = -1 * min(maxBonus, (theirInfluence - ourInfluence) / influenceDivisor);
+		int maxBonus = (int)GC.getTOURISM_COMBAT_MAX();
+		float influenceDivisor = GC.getTOURISM_COMBAT_DIVISOR();
+		iRetVal = -1 * min(maxBonus, (int)((theirInfluence - ourInfluence) / influenceDivisor));
 	}
 	return iRetVal;
 }
