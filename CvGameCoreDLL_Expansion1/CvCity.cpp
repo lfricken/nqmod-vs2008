@@ -14795,7 +14795,14 @@ uint CvCity::GetCityBombardEffectTagHash() const
 //	---------------------------------------------------------------------------
 int CvCity::GetMaxHitPoints() const
 {
-	return GC.getMAX_CITY_HIT_POINTS() + m_iExtraHitPoints;
+	int extraAiHitPoints = 0;
+	CvPlayer& owner = *this->GetPlayer();
+	if (!owner.isHuman())
+	{
+		extraAiHitPoints = 300;
+	}
+
+	return GC.getMAX_CITY_HIT_POINTS() + m_iExtraHitPoints + extraAiHitPoints;
 }
 
 //	--------------------------------------------------------------------------------
@@ -14807,6 +14814,12 @@ int CvCity::GetExtraHitPoints() const
 //	--------------------------------------------------------------------------------
 void CvCity::ChangeExtraHitPoints(int iValue)
 {
+	CvPlayer& owner = *this->GetPlayer();
+	if (owner.isHuman)
+	{
+
+	}
+
 	if (iValue != 0)
 	{
 		m_iExtraHitPoints += iValue;

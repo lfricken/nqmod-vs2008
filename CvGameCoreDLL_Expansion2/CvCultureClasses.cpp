@@ -2604,11 +2604,9 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 
 	if ((int)ePlayer != m_pPlayer->GetID() && kOtherPlayer.isAlive() && !kOtherPlayer.isMinorCiv() && kOtherTeam.isHasMet(m_pPlayer->getTeam()))
 	{
-		// check to see if the other player has the Great Firewall
-		bool bTargetHasGreatFirewall = false;
-
 		int iLoopCity;
 		CvCity *pLoopCity;
+		float fInternetModifier = 1;
 
 		// only check for firewall if the internet influence spread modifier is > 0
 		int iTechSpreadModifier = m_pPlayer->GetInfluenceSpreadModifier();
@@ -2635,16 +2633,20 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 					BuildingTypes eBuilding = (BuildingTypes)playerCivilizationInfo.getCivilizationBuildings(eBuildingClass);
 					if(eBuilding != NO_BUILDING)
 					{
-
 						CvBuildingEntry* pBuildingEntry = GC.GetGameBuildings()->GetEntry(eBuilding);
-						if (!pBuildingEntry || !pBuildingEntry->NullifyInfluenceModifier())
+						// if the city has a building
+						if (pBuildingEntry != NULL && pLoopCity->GetCityBuildings()->GetNumBuilding(eBuilding) > 0)
 						{
-							continue;
-						}
-
-						if(pLoopCity->GetCityBuildings()->GetNumBuilding(eBuilding) > 0)
-						{
-							bTargetHasGreatFirewall = true;				
+							// if that building modifies internet
+							if(pBuildingEntry->GetInternetDefense() != 0)
+							{
+								fInternetModifier *= (1.0f - (pBuildingEntry->GetInternetDefense() / 100.0f));		
+							}
+							// if that building negates internet
+							if(pBuildingEntry->NullifyInfluenceModifier())
+							{
+								fInternetModifier = 0;
+							}
 						}
 					}
 				}
@@ -2664,12 +2666,9 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 
 			// if we have the internet online, check to see if the opponent has the firewall
 			// if they have the firewall, deduct the internet bonus from them
-			if (iTechSpreadModifier > 0 && bTargetHasGreatFirewall)
-			{
-				int iInfluenceWithoutModifier = pLoopCity->GetCityCulture()->GetBaseTourismBeforeModifiers();
-				int iInfluenceWithTechModifier = iInfluenceWithoutModifier * iTechSpreadModifier;
-				iInfluenceToAdd -= (iInfluenceWithTechModifier / 100);
-			}
+			int iInfluenceWithoutModifier = pLoopCity->GetCityCulture()->GetBaseTourismBeforeModifiers();
+			int iInfluenceWithTechModifier = iInfluenceWithoutModifier * iTechSpreadModifier;
+			iInfluenceToAdd -= (int)((iInfluenceWithTechModifier / 100) * (1.0f - fInternetModifier));
 			
 			iRtnValue += iInfluenceToAdd;
 		}
