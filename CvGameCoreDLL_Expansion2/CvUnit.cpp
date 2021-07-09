@@ -11408,9 +11408,24 @@ int CvUnit::GetUnhappinessCombatPenalty() const
 
 	return iPenalty;
 }
-int CvUnit::GetTourismCombatPenalty() const
+int CvUnit::GetTourismCombatPenalty(const PlayerTypes eOtherPlayerId) const
 {
-	return 20;
+	int iRetVal = 0;
+	PlayerTypes eUsPlayerId = getOwner();
+
+	CvPlayer& usPlayer = GET_PLAYER(eUsPlayerId);
+	CvPlayer& themPlayer = GET_PLAYER(eOtherPlayerId);
+
+	int ourInfluence = usPlayer.GetCulture()->GetInfluencePercent(themPlayer.GetID());
+	int theirInfluence = themPlayer.GetCulture()->GetInfluencePercent(usPlayer.GetID());
+	
+	if (theirInfluence > ourInfluence)
+	{
+		int maxBonus = 50;
+		int influenceDivisor = 2;
+		iRetVal = -1 * min(maxBonus, (theirInfluence - ourInfluence) / influenceDivisor);
+	}
+	return iRetVal;
 }
 
 //	--------------------------------------------------------------------------------
@@ -11475,7 +11490,10 @@ int CvUnit::GetGenericMaxStrengthModifier(const CvUnit* pOtherUnit, const CvPlot
 	}
 
 	// Tourism
-	iModifier += GetTourismCombatPenalty();
+	if (pOtherUnit != NULL)
+	{
+		iModifier += GetTourismCombatPenalty(pOtherUnit->getOwner());
+	}
 
 	// Over our strategic resource limit?
 	iTempModifier = GetStrategicResourceCombatPenalty();
@@ -12171,7 +12189,10 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 	}
 
 	// Tourism
-	iModifier += GetTourismCombatPenalty();
+	if(pOtherUnit != NULL)
+	{
+		iModifier += GetTourismCombatPenalty(pOtherUnit->getOwner());
+	}
 
 	// Over our strategic resource limit?
 	iTempModifier = GetStrategicResourceCombatPenalty();

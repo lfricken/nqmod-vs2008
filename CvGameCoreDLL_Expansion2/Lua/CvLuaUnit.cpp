@@ -2921,8 +2921,8 @@ int CvLuaUnit::lGetUnhappinessCombatPenalty(lua_State* L)
 int CvLuaUnit::lGetTourismCombatPenalty(lua_State* L)
 {
 	CvUnit* pkUnit = GetInstance(L);
-
-	const int iResult = pkUnit->GetTourismCombatPenalty();
+	PlayerTypes eOtherPlayerId = (PlayerTypes)lua_tointeger(L, 2);
+	const int iResult = pkUnit->GetTourismCombatPenalty(eOtherPlayerId);
 	lua_pushinteger(L, iResult);
 	return 1;
 }

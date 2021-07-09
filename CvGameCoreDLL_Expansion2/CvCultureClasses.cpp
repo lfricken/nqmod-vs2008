@@ -2680,6 +2680,24 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 
 }
 
+int CvPlayerCulture::GetInfluencePercent(PlayerTypes ePlayer) const
+{
+	int iPercent = 0;
+	CvPlayer &kOtherPlayer = GET_PLAYER(ePlayer);
+	CvTeam &kOtherTeam = GET_TEAM(kOtherPlayer.getTeam());
+	if (kOtherTeam.isHasMet(m_pPlayer->getTeam()))
+	{
+		int iInfluenceOn = GetInfluenceOn(ePlayer);
+		int iLifetimeCulture = kOtherPlayer.GetJONSCultureEverGenerated();
+
+		if (iLifetimeCulture > 0)
+		{
+			iPercent = iInfluenceOn * 100 / iLifetimeCulture;
+		}
+	}
+	return max(0, iPercent);
+}
+
 /// Current influence level on this player
 InfluenceLevelTypes CvPlayerCulture::GetInfluenceLevel(PlayerTypes ePlayer) const
 {
@@ -2694,14 +2712,7 @@ InfluenceLevelTypes CvPlayerCulture::GetInfluenceLevel(PlayerTypes ePlayer) cons
 	}
 	else
 	{
-		int iInfluenceOn = GetInfluenceOn(ePlayer);
-		int iLifetimeCulture = kOtherPlayer.GetJONSCultureEverGenerated();
-		int iPercent = 0;
-
-		if (iLifetimeCulture > 0)
-		{
-			iPercent = iInfluenceOn * 100 / iLifetimeCulture;
-		}
+		int iPercent = GetInfluencePercent(ePlayer);
 
 		eRtnValue = INFLUENCE_LEVEL_UNKNOWN;
 
