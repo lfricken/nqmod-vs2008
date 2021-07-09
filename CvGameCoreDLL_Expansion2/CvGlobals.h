@@ -6991,6 +6991,14 @@ public:
 
 	// -- floats --
 
+	inline float getTOURISM_COMBAT_MAX()
+	{
+		return m_fTOURISM_COMBAT_MAX;
+	}
+	inline float getTOURISM_COMBAT_DIVISOR()
+	{
+		return m_fTOURISM_COMBAT_DIVISOR;
+	}
 	inline float getDIPLO_VICTORY_CIV_DELEGATES_COEFFICIENT()
 	{
 		return m_fDIPLO_VICTORY_CIV_DELEGATES_COEFFICIENT;
@@ -9564,6 +9572,8 @@ protected:
 
 	// -- floats --
 
+	float m_fTOURISM_COMBAT_MAX;
+	float m_fTOURISM_COMBAT_DIVISOR;
 	float m_fDIPLO_VICTORY_CIV_DELEGATES_COEFFICIENT;
 	float m_fDIPLO_VICTORY_CIV_DELEGATES_CONSTANT;
 	float m_fDIPLO_VICTORY_CS_DELEGATES_COEFFICIENT;
