@@ -1542,7 +1542,7 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 	CvUnit* pInterceptor = kAttacker.GetBestInterceptor(plot, pkDefender);
 	int iInterceptionDamage = 0;
 
-	if(pInterceptor != NULL && pInterceptor != pkDefender)
+	if(pInterceptor != NULL)
 	{
 		pkCombatInfo->setUnit(BATTLE_UNIT_INTERCEPTOR, pInterceptor);
 		int evasion = kAttacker.evasionProbability();
