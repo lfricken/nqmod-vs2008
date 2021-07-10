@@ -1545,14 +1545,12 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 	if(pInterceptor != NULL && pInterceptor != pkDefender)
 	{
 		pkCombatInfo->setUnit(BATTLE_UNIT_INTERCEPTOR, pInterceptor);
+		int evasion = kAttacker.evasionProbability();
+		int intercept = pInterceptor->currInterceptionProbability();
 		// Does the attacker evade?
-		if(GC.getGame().getJonRandNum(100, "Evasion Rand") >= kAttacker.evasionProbability())
+		if(intercept != 0 && GC.getGame().getJonRandNum(intercept + evasion, "Evasion Rand") < intercept)
 		{
-			// Is the interception successful?
-			if(GC.getGame().getJonRandNum(100, "Intercept Rand (Air)") < pInterceptor->currInterceptionProbability())
-			{
-				iInterceptionDamage = pInterceptor->GetInterceptionDamage(&kAttacker);
-			}
+			iInterceptionDamage = pInterceptor->GetInterceptionDamage(&kAttacker);
 		}
 		pkCombatInfo->setDamageInflicted(BATTLE_UNIT_INTERCEPTOR, iInterceptionDamage);		// Damage inflicted this round
 	}
@@ -1653,6 +1651,13 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 		}
 	}
 	//////////////////////////////////////////////////////////////////////
+
+	// we were intercepted, do less damage
+	if (iInterceptionDamage > 0)
+	{
+		iAttackerDamageInflicted = 1;
+		iAttackerTotalDamageInflicted = 1;
+	}
 
 	pkCombatInfo->setFinalDamage(BATTLE_UNIT_ATTACKER, iDefenderTotalDamageInflicted);				// Total damage to the unit
 	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_ATTACKER, iAttackerDamageInflicted);		// Damage inflicted this round

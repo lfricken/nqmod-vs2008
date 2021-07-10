@@ -14799,7 +14799,7 @@ int CvCity::GetMaxHitPoints() const
 	CvPlayer& owner = *this->GetPlayer();
 	if (!owner.isHuman())
 	{
-		extraAiHitPoints = 300;
+		extraAiHitPoints = GC.getMAX_CITY_HIT_POINTS_AI_BONUS();
 	}
 
 	return GC.getMAX_CITY_HIT_POINTS() + m_iExtraHitPoints + extraAiHitPoints;

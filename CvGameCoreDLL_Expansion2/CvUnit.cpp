@@ -12912,7 +12912,7 @@ CvUnit* CvUnit::GetBestInterceptor(const CvPlot& interceptPlot, CvUnit* pkDefend
 											if(plotDistance(pLoopUnit->getX(), pLoopUnit->getY(), interceptPlot.getX(), interceptPlot.getY()) <= pLoopUnit->getUnitInfo().GetAirInterceptRange())
 											{
 												iValue = pLoopUnit->currInterceptionProbability();
-
+												iValue *= (float)pLoopUnit->GetCurrHitPoints() / (float)pLoopUnit->GetMaxHitPoints();
 												if(iValue > iBestValue)
 												{
 													iBestValue = iValue;
@@ -13091,6 +13091,8 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 	iInterceptorDamage /= 100;
 #endif
 
+	float interceptionDamageFraction = GC.getINTERCEPTION_DAMAGE_MULTIPLIER();
+	iInterceptorDamage *= interceptionDamageFraction;
 	// Bring it back out of hundreds
 	iInterceptorDamage /= 100;
 	
@@ -13790,14 +13792,7 @@ int CvUnit::maxInterceptionProbability() const
 int CvUnit::currInterceptionProbability() const
 {
 	VALIDATE_OBJECT
-	if(getDomainType() != DOMAIN_AIR)
-	{
-		return maxInterceptionProbability();
-	}
-	else
-	{
-		return ((maxInterceptionProbability() * GetCurrHitPoints()) / GetMaxHitPoints());
-	}
+	return maxInterceptionProbability();
 }
 
 

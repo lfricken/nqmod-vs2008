@@ -5969,6 +5969,10 @@ public:
 	{
 		return m_iMAX_CITY_HIT_POINTS;
 	}
+	inline int getMAX_CITY_HIT_POINTS_AI_BONUS()
+	{
+		return m_iMAX_CITY_HIT_POINTS_AI_BONUS;
+	}
 	inline int getCITY_HIT_POINTS_HEALED_PER_TURN()
 	{
 		return m_iCITY_HIT_POINTS_HEALED_PER_TURN;
