@@ -17302,19 +17302,23 @@ uint CvCity::GetCityBombardEffectTagHash() const
 //	---------------------------------------------------------------------------
 int CvCity::GetMaxHitPoints() const
 {
-	return GC.getMAX_CITY_HIT_POINTS() + GetExtraHitPoints();
+	int total = GC.getMAX_CITY_HIT_POINTS() + GetExtraHitPoints();
+
+	// give AI some extra city hitpoints cents they dumm
+	int extraAiHitpoints = 0;
+	if (!this->isHuman())
+	{
+		extraAiHitpoints = total * GC.getMAX_CITY_HIT_POINTS_AI_BONUS();
+		extraAiHitpoints /= 100;
+	}
+
+	return total + extraAiHitpoints;
 }
 
 //	--------------------------------------------------------------------------------
 int CvCity::GetExtraHitPoints() const
 {
-	int extraAiHitpoints = 0;
-	if (!this->isHuman())
-	{
-		extraAiHitpoints = GC.getMAX_CITY_HIT_POINTS_AI_BONUS();
-	}
-
-	return m_iExtraHitPoints + extraAiHitpoints;
+	return m_iExtraHitPoints;
 }
 
 //	--------------------------------------------------------------------------------
