@@ -2670,7 +2670,7 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 			// if they have the firewall, deduct the internet bonus from them
 			int iInfluenceWithoutModifier = pLoopCity->GetCityCulture()->GetBaseTourismBeforeModifiers();
 			int iInfluenceWithTechModifier = iInfluenceWithoutModifier * iTechSpreadModifier;
-			fInternetModifier = max(0, fInternetModifier); // avoid subtracting more than internet
+			fInternetModifier = max(0.0f, fInternetModifier); // avoid subtracting more than internet
 			iInfluenceToAdd -= (int)((iInfluenceWithTechModifier / 100) * (1.0f - fInternetModifier));
 			
 			iRtnValue += iInfluenceToAdd;
