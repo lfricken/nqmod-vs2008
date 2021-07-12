@@ -2639,8 +2639,10 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 						{
 							// if that building modifies internet
 							if(pBuildingEntry->GetInternetDefense() != 0)
-							{
-								fInternetModifier *= (1.0f - (pBuildingEntry->GetInternetDefense() / 100.0f));		
+							{ 
+								// avoid subtracting more than internet
+								int internetDefense = max(0, pBuildingEntry->GetInternetDefense());
+								fInternetModifier *= (1.0f - (internetDefense / 100.0f));		
 							}
 							// if that building negates internet
 							if(pBuildingEntry->NullifyInfluenceModifier())
@@ -2668,6 +2670,7 @@ int CvPlayerCulture::GetInfluencePerTurn(PlayerTypes ePlayer) const
 			// if they have the firewall, deduct the internet bonus from them
 			int iInfluenceWithoutModifier = pLoopCity->GetCityCulture()->GetBaseTourismBeforeModifiers();
 			int iInfluenceWithTechModifier = iInfluenceWithoutModifier * iTechSpreadModifier;
+			fInternetModifier = max(0, fInternetModifier); // avoid subtracting more than internet
 			iInfluenceToAdd -= (int)((iInfluenceWithTechModifier / 100) * (1.0f - fInternetModifier));
 			
 			iRtnValue += iInfluenceToAdd;
