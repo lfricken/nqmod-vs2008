@@ -1542,7 +1542,8 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 	CvUnit* pInterceptor = kAttacker.GetBestInterceptor(plot, pkDefender);
 	int iInterceptionDamage = 0;
 
-	if(pInterceptor != NULL)
+	// 0 evasion means it cannot be intercepted
+	if(kAttacker.evasionProbability() != 0 && pInterceptor != NULL)
 	{
 		pkCombatInfo->setUnit(BATTLE_UNIT_INTERCEPTOR, pInterceptor);
 		int evasion = kAttacker.evasionProbability();
@@ -1651,13 +1652,6 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 		}
 	}
 	//////////////////////////////////////////////////////////////////////
-
-	// we were intercepted, do less damage
-	if (iInterceptionDamage > 0)
-	{
-		iAttackerDamageInflicted = 1;
-		iAttackerTotalDamageInflicted = 1;
-	}
 
 	pkCombatInfo->setFinalDamage(BATTLE_UNIT_ATTACKER, iDefenderTotalDamageInflicted);				// Total damage to the unit
 	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_ATTACKER, iAttackerDamageInflicted);		// Damage inflicted this round
@@ -1958,6 +1952,17 @@ void CvUnitCombat::ResolveAirUnitVsCombat(const CvCombatInfo& kCombatInfo, uint 
 
 		// Report that combat is over in case we want to queue another attack
 		GET_PLAYER(pkAttacker->getOwner()).GetTacticalAI()->CombatResolved(pkAttacker, bTargetDied);
+	}
+
+	if (pkAttacker && pInterceptor && iInterceptionDamage > 0)
+	{
+		strBuffer = GetLocalizedText("TXT_KEY_MISC_FRIENDLY_AIR_UNIT_INTERCEPTED", pkAttacker->getNameKey(), pkAttacker->getVisualCivAdjective(pInterceptor->getTeam()), pInterceptor->getNameKey(), iInterceptionDamage);
+		pkDLLInterface->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer);
+	}
+	if (pkAttacker && pInterceptor && iInterceptionDamage <= 0)
+	{
+		strBuffer = GetLocalizedText("TXT_KEY_MISC_FRIENDLY_AIR_UNIT_INTERCEPTED_EVADED", pkAttacker->getNameKey(), pkAttacker->getVisualCivAdjective(pInterceptor->getTeam()), pInterceptor->getNameKey());
+		pkDLLInterface->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer);
 	}
 }
 

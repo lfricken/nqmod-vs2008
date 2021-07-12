@@ -12654,6 +12654,11 @@ int CvUnit::GetAirCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bInc
 
 	iAttackerDamage = max(1,iAttackerDamage);
 
+	if (iAssumeExtraDamage > 0) // cap damage if intercepted
+	{
+		iAttackerDamage = 1;
+	}
+
 	return iAttackerDamage;
 }
 
